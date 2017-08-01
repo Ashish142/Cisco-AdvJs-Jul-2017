@@ -200,8 +200,11 @@ describe('groupBy', function(){
 		var result = {};
 		for(var index=0; index < list.length; index++){
 			var key = keySelector(list[index]);
+			/*
 			if (typeof result[key] === 'undefined')
 				result[key] = [];
+			*/
+			result[key] = result[key] || [];
 			result[key].push(list[index]);
 		}
 		return result;
