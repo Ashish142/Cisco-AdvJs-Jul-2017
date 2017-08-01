@@ -113,12 +113,84 @@ describe('Sort', function(){
 
 });
 
-/*function filter(){
 
-}
 describe('filter', function(){
-	describe('costly products', function(){
-		filter()
-		console.table(products);
+	function filter(list, criteriaFn){
+		var result = [];
+		for(var index =0; index < list.length; index++)
+			if (criteriaFn(list[index]))
+				result.push(list[index]);
+		return result;
+	}
+
+	function negate(criteriaFn){
+		return function(){
+			return !criteriaFn.apply(this, arguments);
+		};
+	}
+
+	describe("filter by cost", function(){
+		var costlyProductCriteria = function(product){
+			return product.cost > 60;
+		};
+		/*var affordableProductCriteria = function(product){
+			//return product.cost <= 60;
+			return !costlyProductCriteria(product);
+		};*/
+		var affordableProductCriteria = negate(costlyProductCriteria);
+
+		describe('costly products', function(){
+			
+			/*function filterCostlyProducts(){
+				var costlyProducts  = [];
+				for(var index=0; index < products.length; index++)
+					if (products[index].cost > 60)
+						costlyProducts.push(products[index]);
+				return costlyProducts;
+			}
+
+			var costlyProducts = filterCostlyProducts();*/
+			
+			var costlyProducts = filter(products, costlyProductCriteria);
+			console.table(costlyProducts);
+		});
+
+		describe('affordable products', function(){
+			
+			var affordableProducts = filter(products, costlyProductCriteria);
+			console.table(affordableProducts);
+		});
+
 	});
-});*/
+
+	describe('filter by category', function(){
+		var stationaryProductCriteria = function(product){
+			return product.category === 'stationary';
+		};
+		/*
+		var nonStationaryProductCriteria = function(product){
+			return !stationaryProductCriteria(product);
+		};
+		*/
+		var nonStationaryProductCriteria = negate(stationaryProductCriteria);
+
+		describe('stationary products', function(){
+			/*function filterStationaryProducts(){
+				var stationaryProducts  = [];
+				for(var index=0; index < products.length; index++)
+					if (products[index].category === 'stationary')
+						stationaryProducts.push(products[index]);
+				return stationaryProducts;
+			}
+			var stationaryProducts = filterStationaryProducts();*/
+			
+			var stationaryProducts = filter(products, stationaryProductCriteria);
+			console.table(stationaryProducts);
+		});
+		describe('Non stationary products', function(){
+			var nonStationaryProducts = filter(products, nonStationaryProductCriteria);
+			console.table(nonStationaryProducts);
+		})
+	});
+
+});
